@@ -191,6 +191,10 @@ public class ReporteServiceImpl implements IReporteService {
                 .orElseThrow(() -> new ResourceNotFoundException("Reporte no encontrado"));
         Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        // Regla de Seguridad: Si la nota se intenta marcar como privada, el usuario debe ser GESTOR, OPERADOR o ADMINISTRADOR
+        if (Boolean.TRUE.equals(dto.getEsNotaInterna()) && usuario.getRol().equals(Rol.ROLE_CIUDADANO)) {
+            throw new BusinessRuleException("Los ciudadanos no están autorizados a crear notas internas privadas.");
+        }
 
         Seguimiento seg = Seguimiento.builder()
                 .reporte(reporte)

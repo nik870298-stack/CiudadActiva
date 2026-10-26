@@ -26,6 +26,8 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
+    private String telefono; // Campo teléfono añadido
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Rol rol;

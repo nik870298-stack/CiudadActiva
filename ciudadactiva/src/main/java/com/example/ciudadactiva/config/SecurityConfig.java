@@ -23,8 +23,12 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints Públicos / Swagger
+                        // Endpoints Públicos
                         .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/health").permitAll()
+
+                        // Gestión Exclusiva de Usuarios por el ADMINISTRADOR
+                        .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
 
                         // Categorías
                         .requestMatchers(HttpMethod.POST, "/api/categorias").hasRole("ADMINISTRADOR")
