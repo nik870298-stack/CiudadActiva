@@ -4,11 +4,12 @@ import com.example.ciudadactiva.entity.enums.Rol;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "usuarios")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Builder
 public class Usuario {
 
@@ -16,24 +17,27 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password_cifrada", nullable = false)
-    private String passwordCifrada;
+    @Column(nullable = false)
+    private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private Rol rol;
 
-    @Builder.Default
     @Column(nullable = false)
+    @Builder.Default
     private Boolean activo = true;
 
+    @Column(name = "contador_spam", nullable = false)
     @Builder.Default
-    @Column(name = "contador_rechazos_spam", nullable = false)
-    private Integer contadorRechazosSpam = 0;
+    private Integer contadorSpam = 0;
+
+    @Column(name = "fecha_fin_suspension")
+    private LocalDateTime fechaFinSuspension;
 }

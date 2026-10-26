@@ -1,4 +1,7 @@
 package com.example.ciudadactiva.repository;
 
-public interface EvidenciaRepository {
+import com.example.ciudadactiva.entity.Evidencia;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface EvidenciaRepository extends JpaRepository<Evidencia, Long> {
 }

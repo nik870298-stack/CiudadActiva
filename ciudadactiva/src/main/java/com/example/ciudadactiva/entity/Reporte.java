@@ -4,13 +4,15 @@ import com.example.ciudadactiva.entity.enums.EstadoReporte;
 import com.example.ciudadactiva.entity.enums.Prioridad;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "reportes")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Builder
 public class Reporte {
 
@@ -18,26 +20,8 @@ public class Reporte {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_id", nullable = false)
-    private CategoriaIncidencia categoria;
-
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String descripcion;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    @Builder.Default
-    private EstadoReporte estado = EstadoReporte.PENDIENTE;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "prioridad_oficial", length = 20)
-    @Builder.Default
-    private Prioridad prioridadOficial = Prioridad.BAJA;
 
     @Column(nullable = false)
     private Double latitud;
@@ -45,17 +29,41 @@ public class Reporte {
     @Column(nullable = false)
     private Double longitud;
 
-    @Column(length = 255)
     private String direccion;
 
-    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private EstadoReporte estado = EstadoReporte.PENDIENTE;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private Prioridad prioridad = Prioridad.BAJA;
+
+    @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
     @Column(name = "fecha_limite_sla")
-    private LocalDateTime fechaLimiteSLA;
+    private LocalDateTime fechaLimiteSla;
 
-    @PrePersist
-    protected void onCreate() {
-        this.fechaCreacion = LocalDateTime.now();
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ciudadano_id", nullable = false)
+    private Usuario ciudadano;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private CategoriaIncidencia categoria;
+
+    @OneToMany(mappedBy = "reporte", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Evidencia> evidencias = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reporte", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Seguimiento> seguimientos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reporte", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Asignacion> asignaciones = new ArrayList<>();
 }
