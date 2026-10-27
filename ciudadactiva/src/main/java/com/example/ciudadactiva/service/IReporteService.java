@@ -18,5 +18,6 @@ public interface IReporteService {
     void asignarOperador(Long id, AsignarOperadorDTO dto, String emailGestor);
     void registrarSeguimiento(Long id, RegistrarSeguimientoDTO dto, String emailUsuario);
     void cerrarReporte(Long id, CerrarReporteDTO dto, String emailOperador);
+    List<ReporteResponseDTO> obtenerMisReportesAsignados(String emailOperador);
     void agregarComentarioCiudadano(Long id, String comentario, Integer calificacion, String emailCiudadano);
 }

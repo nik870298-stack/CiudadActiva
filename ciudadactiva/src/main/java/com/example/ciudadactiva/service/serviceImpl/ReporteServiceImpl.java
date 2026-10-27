@@ -311,6 +311,26 @@ public class ReporteServiceImpl implements IReporteService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReporteResponseDTO> obtenerMisReportesAsignados(String emailOperador) {
+        Usuario operador = usuarioRepository.findByEmail(emailOperador)
+                .orElseThrow(() -> new ResourceNotFoundException("Operador no encontrado"));
+
+        // Valida que el usuario sea realmente un Operador (o Gestor/Admin si aplica)
+        if (!operador.getRol().equals(Rol.ROLE_OPERADOR) &&
+                !operador.getRol().equals(Rol.ROLE_ADMINISTRADOR) &&
+                !operador.getRol().equals(Rol.ROLE_GESTOR)) {
+            throw new BusinessRuleException("El usuario no tiene un rol de operador válido.");
+        }
+
+        List<Reporte> reportes = reporteRepository.findByOperadorAsignadoId(operador.getId());
+
+        return reportes.stream()
+                .map(r -> mapToDTO(r, operador))
+                .collect(Collectors.toList());
+    }
+
     private ReporteResponseDTO mapToDTO(Reporte r, Usuario usuarioConsulta) {
         Long conteoSpamArea = reporteRepository.contarReportesCercanosActivos(r.getCategoria().getId(), r.getLatitud(), r.getLongitud());
 

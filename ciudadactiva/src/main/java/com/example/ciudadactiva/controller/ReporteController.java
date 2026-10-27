@@ -46,6 +46,12 @@ public class ReporteController {
         return ResponseEntity.ok(reporteService.obtenerDetalle(id, auth.getName()));
     }
 
+    @GetMapping("/mis-asignaciones")
+    public ResponseEntity<List<ReporteResponseDTO>> obtenerMisReportesAsignados(Authentication authentication) {
+        List<ReporteResponseDTO> reportes = reporteService.obtenerMisReportesAsignados(authentication.getName());
+        return ResponseEntity.ok(reportes);
+    }
+
     @PatchMapping("/{id}/validar")
     public ResponseEntity<ReporteResponseDTO> validar(@PathVariable Long id, @Valid @RequestBody ValidarReporteDTO dto, Authentication auth) {
         return ResponseEntity.ok(reporteService.validarReporte(id, dto, auth.getName()));

@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/reportes/mis-reportes").hasRole("CIUDADANO")
                         .requestMatchers(HttpMethod.GET, "/api/reportes/{id}/seguimientos").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/reportes/{id}/validar").hasAnyRole("GESTOR", "ADMINISTRADOR")
+                        .requestMatchers("/api/reportes/mis-asignaciones").hasAnyRole("OPERADOR")
                         .requestMatchers(HttpMethod.POST, "/api/reportes/{id}/asignaciones").hasAnyRole("GESTOR", "ADMINISTRADOR")
                         .requestMatchers(HttpMethod.PATCH, "/api/reportes/{id}/cerrar").hasRole("OPERADOR")
 

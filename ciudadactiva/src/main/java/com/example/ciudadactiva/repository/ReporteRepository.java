@@ -13,6 +13,14 @@ import java.util.Optional;
 
 public interface ReporteRepository extends JpaRepository<Reporte, Long> {
 
+    @Query("SELECT DISTINCT r FROM Reporte r " +
+            "JOIN FETCH r.ciudadano " +
+            "JOIN FETCH r.categoria " +
+            "LEFT JOIN FETCH r.evidencias " +
+            "JOIN r.asignaciones a " +
+            "WHERE a.operador.id = :operadorId")
+    List<Reporte> findByOperadorAsignadoId(@Param("operadorId") Long operadorId);
+
     List<Reporte> findByCiudadanoId(Long ciudadanoId);
 
     // DTO Fetches evitando problema N+1
