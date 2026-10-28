@@ -1,5 +1,6 @@
 package com.example.ciudadactiva.controller;
 
+import com.example.ciudadactiva.dto.request.CambiarEstadoUsuarioDTO;
 import com.example.ciudadactiva.dto.request.RegistroUsuarioAdminDTO;
 import com.example.ciudadactiva.dto.response.UsuarioResponseDTO;
 import com.example.ciudadactiva.service.IUsuarioService;
@@ -26,6 +27,15 @@ public class UsuarioController {
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<UsuarioResponseDTO> cambiarEstadoUsuario(
+            @PathVariable Long id,
+            @Valid @RequestBody CambiarEstadoUsuarioDTO request) {
+
+        UsuarioResponseDTO response = usuarioService.cambiarEstadoUsuario(id, request.getActivo());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping

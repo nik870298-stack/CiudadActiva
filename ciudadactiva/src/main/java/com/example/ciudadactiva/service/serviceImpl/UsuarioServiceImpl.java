@@ -140,6 +140,23 @@ public class UsuarioServiceImpl implements IUsuarioService {
         }
     }
 
+    @Override
+    @Transactional
+    public UsuarioResponseDTO cambiarEstadoUsuario(Long usuarioId, Boolean activo) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + usuarioId));
+
+        usuario.setActivo(activo);
+
+        // Si se reactiva manualmente, limpiamos cualquier suspensión previa por spam
+        if (Boolean.TRUE.equals(activo)) {
+            usuario.setFechaFinSuspension(null);
+        }
+
+        usuarioRepository.save(usuario);
+        return mapToDTO(usuario);
+    }
+
     private UsuarioResponseDTO mapToDTO(Usuario u) {
         boolean esCiudadano = u.getRol().equals(Rol.ROLE_CIUDADANO);
 

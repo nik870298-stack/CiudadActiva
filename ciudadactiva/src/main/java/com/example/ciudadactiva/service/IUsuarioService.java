@@ -13,6 +13,7 @@ public interface IUsuarioService {
     UsuarioResponseDTO registrarCiudadano(RegistroPublicoCiudadanoDTO request);
     UsuarioResponseDTO registrarUsuarioPorAdmin(RegistroUsuarioAdminDTO request);
     UsuarioResponseDTO obtenerPerfil(String email);
+    UsuarioResponseDTO cambiarEstadoUsuario(Long usuarioId, Boolean activo);
     List<UsuarioResponseDTO> listarTodosLosUsuarios();
     void eliminarUsuario(Long id);
 }
